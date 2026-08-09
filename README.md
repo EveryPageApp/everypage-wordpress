@@ -114,7 +114,9 @@ Security on the wp.org profile, not the account password).
 
 Screenshots on the listing come from `assets/screenshot-N.png` in SVN, matching
 the numbered captions in `readme.txt`'s Screenshots section — reorder one and
-you reorder the other.
+you reorder the other. The banners are rendered from `bin/banner-source.html`
+(one file, screenshotted at 772x250 at 1x and 2x; the recipe is in its header
+comment), so a brand tweak is an edit rather than a redraw.
 
 ## License
 
