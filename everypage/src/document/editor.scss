@@ -1,0 +1,126 @@
+/**
+ * Editor-only styles: picker layout, inspector notes, the click-capture
+ * overlay for the live iframe preview, and an editor copy of the front-end
+ * button look (assets/shortcode.css is not loaded in the editor canvas).
+ */
+
+.everypage-embed--editor {
+	.everypage-embed__overlay {
+		position: absolute;
+		inset: 0;
+		// Capture the click so the block can be selected instead of the iframe.
+		cursor: pointer;
+	}
+}
+
+.everypage-picker {
+	.everypage-picker__list {
+		margin: 8px 0 0;
+		padding: 0;
+		list-style: none;
+		width: 100%;
+		max-height: 220px;
+		overflow-y: auto;
+		border: 1px solid #ddd;
+		border-radius: 2px;
+
+		li {
+			margin: 0;
+			border-bottom: 1px solid #eee;
+
+			&:last-child {
+				border-bottom: 0;
+			}
+		}
+	}
+
+	.everypage-picker__item {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		width: 100%;
+		height: auto;
+		padding: 8px 12px;
+		text-align: left;
+	}
+
+	.everypage-picker__name {
+		font-weight: 600;
+		overflow-wrap: anywhere;
+	}
+
+	.everypage-picker__meta {
+		font-size: 12px;
+		color: #757575;
+	}
+
+	.everypage-picker__empty {
+		width: 100%;
+		color: #757575;
+	}
+
+	.everypage-picker__actions {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+		width: 100%;
+		margin-top: 8px;
+	}
+}
+
+.everypage-doc-name {
+	font-weight: 600;
+	margin-bottom: 0;
+	overflow-wrap: anywhere;
+}
+
+.everypage-doc-meta {
+	color: #757575;
+	margin-top: 2px;
+}
+
+.everypage-panel-note {
+	color: #757575;
+	font-size: 12px;
+}
+
+.everypage-upgrade-note {
+	color: #757575;
+	font-size: 12px;
+	margin: 4px 0 8px;
+}
+
+.everypage-viewer-group {
+	margin-top: 16px;
+	padding-top: 12px;
+	border-top: 1px solid #f0f0f0;
+}
+
+.everypage-theme-swatches {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	margin: 8px 0;
+	font-size: 12px;
+
+	span {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+}
+
+// Editor copy of the front-end button (see assets/shortcode.css — "Paper &
+// Ink" vermillion letterpress). Keep the two in sync.
+.editor-styles-wrapper .everypage-share-button {
+	display: inline-block;
+	padding: 10px 20px;
+	font-weight: 600;
+	line-height: 1.4;
+	color: #fcfaf4 !important;
+	background: #c2401c;
+	border: 1.5px solid #1c1812;
+	border-radius: 4px;
+	box-shadow: 2px 2px 0 0 #1c1812;
+	text-decoration: none;
+}

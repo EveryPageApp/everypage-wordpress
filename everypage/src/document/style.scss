@@ -1,0 +1,21 @@
+/**
+ * Front-end styles for the everypage/document block (embed mode wrapper).
+ * Button/link mode reuses assets/shortcode.css, enqueued by the shared PHP
+ * renderer, so block and shortcode buttons always look identical.
+ */
+
+.wp-block-everypage-document {
+	max-width: 100%;
+}
+
+.everypage-embed {
+	position: relative;
+	max-width: 100%;
+
+	iframe {
+		display: block;
+		width: 100%;
+		max-width: 100%;
+		border: 0;
+	}
+}

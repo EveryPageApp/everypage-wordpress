@@ -1,0 +1,33 @@
+/**
+ * Frontend styling for the [everypage button="yes"] shortcode. Self-contained
+ * (no CSS variables) because the public site never loads the admin stylesheet.
+ * Mirrors the "Paper & Ink" vermillion letterpress button.
+ */
+
+.everypage-share-button {
+	display: inline-block;
+	padding: 10px 20px;
+	font-weight: 600;
+	line-height: 1.4;
+	color: #fcfaf4 !important;
+	background: #c2401c;
+	border: 1.5px solid #1c1812;
+	border-radius: 4px;
+	box-shadow: 2px 2px 0 0 #1c1812;
+	text-decoration: none;
+	transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease;
+}
+
+.everypage-share-button:hover,
+.everypage-share-button:focus {
+	color: #fcfaf4 !important;
+	background: #9a3214;
+	box-shadow: 3px 3px 0 0 #1c1812;
+	transform: translate(-1px, -1px);
+	text-decoration: none;
+}
+
+.everypage-share-button:active {
+	box-shadow: 1px 1px 0 0 #1c1812;
+	transform: translate(1px, 1px);
+}

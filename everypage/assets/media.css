@@ -1,0 +1,142 @@
+/**
+ * Media Library additions for EveryPage. The modal, button, and QR idioms
+ * come from admin.css (enqueued alongside); this file only adds what the
+ * Media screens need: stacking above the WP media modal, the share-trio
+ * layout, the replace-links preview table, and the list-table column.
+ */
+
+/* The WP media modal sits at z-index 160000; our dialogs must stack above it. */
+.everypage-media-wrap .everypage-modal {
+	z-index: 400000;
+}
+
+/* ---- Share modal (link / QR / embed trio) ------------------------------ */
+
+.everypage-media-card {
+	width: 400px;
+}
+
+.everypage-media-card .ep-m-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0 0 14px;
+}
+
+.everypage-media-card .ep-m-row .everypage-link {
+	flex: 1 1 auto;
+	min-width: 0;
+	font-family: var(--ep-mono);
+	font-size: 12px;
+	color: var(--ep-ink-soft);
+	background: var(--ep-paper);
+	border: 1px solid var(--ep-line);
+	border-radius: 3px;
+	padding: 6px 9px;
+}
+
+.everypage-media-card .ep-m-qr {
+	margin-bottom: 14px;
+}
+
+.everypage-media-card .ep-m-actions {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+	flex-wrap: wrap;
+	margin: 0 0 12px;
+}
+
+.everypage-media-card .ep-m-meta {
+	margin: 4px 0 0;
+	font-size: 12.5px;
+}
+
+.everypage-media-card #ep-m-share-status {
+	margin-top: 0;
+	color: var(--ep-ledger);
+	font-weight: 600;
+}
+
+/* ---- Replace-links modal ----------------------------------------------- */
+
+.everypage-replace-card {
+	width: 640px;
+	max-height: 84vh;
+	overflow-y: auto;
+	text-align: left;
+}
+
+.everypage-replace-card .everypage-modal-title,
+.everypage-replace-card .everypage-modal-sub {
+	text-align: left;
+}
+
+.ep-replace-urls {
+	font-family: var(--ep-mono);
+	font-size: 12px;
+	color: var(--ep-ink-soft);
+	word-break: break-all;
+	background: var(--ep-paper);
+	border: 1px solid var(--ep-line);
+	border-radius: 3px;
+	padding: 8px 10px;
+}
+
+.ep-replace-tablewrap {
+	max-height: 300px;
+	overflow-y: auto;
+	border: 1px solid var(--ep-line);
+	border-radius: 3px;
+	margin: 12px 0;
+}
+
+.ep-replace-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+
+.ep-replace-table th,
+.ep-replace-table td {
+	text-align: left;
+	padding: 7px 10px;
+	border-bottom: 1px solid var(--ep-line-soft);
+}
+
+.ep-replace-table thead th {
+	position: sticky;
+	top: 0;
+	background: var(--ep-paper);
+	font-weight: 600;
+	color: var(--ep-ink-soft);
+}
+
+.ep-replace-table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.ep-replace-status.is-ok {
+	color: var(--ep-ledger);
+	font-weight: 600;
+}
+
+.ep-replace-status.is-bad {
+	color: var(--ep-vermillion-deep);
+	font-weight: 600;
+}
+
+/* ---- Media list column / details field --------------------------------- */
+
+.fixed .column-everypage {
+	width: 10%;
+}
+
+.everypage-media-notshared {
+	color: #8c8f94; /* matches WP's muted list-table text */
+}
+
+.everypage-media-status {
+	display: inline-block;
+	margin-right: 8px;
+}

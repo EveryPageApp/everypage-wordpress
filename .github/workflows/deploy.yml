@@ -1,0 +1,68 @@
+# Pushes a tagged release to the WordPress.org plugin directory over SVN.
+#
+# Tag the release commit `v1.2.0` and push it; the action syncs everypage/ into
+# trunk/, copies wporg-assets/ into assets/, and creates tags/1.2.0. The version
+# in everypage.php, EVERYPAGE_VERSION, and readme.txt's Stable tag must all match
+# the tag (minus the leading `v`) or the directory serves the wrong release.
+#
+# Requires two repo secrets: SVN_USERNAME and SVN_PASSWORD (a WordPress.org SVN
+# password, generated under Account & Security on the wp.org profile - not the
+# account password).
+name: Deploy to WordPress.org
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: everypage/package-lock.json
+
+      # The committed build/ output is what register_block_type loads; rebuild
+      # it here so a release can never ship a bundle that drifted from src/.
+      - name: Build the block
+        working-directory: everypage
+        run: |
+          npm ci
+          npm run build
+
+      - name: Verify the tag matches the plugin version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          HEADER=$(sed -n 's/^ \* Version: *//p' everypage/everypage.php | head -1 | tr -d ' ')
+          CONST=$(sed -n "s/.*EVERYPAGE_VERSION', *'\([^']*\)'.*/\1/p" everypage/everypage.php | head -1)
+          STABLE=$(sed -n 's/^Stable tag: *//p' everypage/readme.txt | head -1 | tr -d ' ')
+          echo "tag=$TAG header=$HEADER const=$CONST stable=$STABLE"
+          for v in "$HEADER" "$CONST" "$STABLE"; do
+            if [ "$v" != "$TAG" ]; then
+              echo "::error::version mismatch - tag $TAG vs $v"
+              exit 1
+            fi
+          done
+
+      # BUILD_DIR is copied into trunk wholesale - .distignore is not consulted -
+      # so the dev dependencies npm ci just installed must go before the sync.
+      - name: Drop dev-only files from the build dir
+        run: rm -rf everypage/node_modules
+
+      - name: Deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: everypage
+          BUILD_DIR: everypage
+          ASSETS_DIR: wporg-assets

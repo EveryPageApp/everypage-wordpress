@@ -1,0 +1,1009 @@
+/**
+ * EveryPage admin styling - the "Paper & Ink" world, dropped into wp-admin.
+ *
+ * A warm cream sheet on the desk: ink text, one sealing-wax accent, hard
+ * letterpress block shadows (never blurred - that's the EveryPage tell), and
+ * a serif display face. Everything is scoped under .everypage-screen so it
+ * never bleeds into WordPress core or other plugins' pages.
+ */
+
+.everypage-screen {
+	/* Surfaces - warm print stock, shifting only lightness within one hue. */
+	--ep-paper: #f4eee1; /* the desk */
+	--ep-paper-deep: #eae1cc; /* recessed / hovers */
+	--ep-sheet: #fcfaf4; /* a sheet on the desk (cards, table) */
+	--ep-manila: #e7d7ae; /* manila-folder tint, highlights */
+
+	/* Ink - one near-black brown, four levels of presence. */
+	--ep-ink: #1c1812; /* primary text & borders */
+	--ep-ink-soft: #57503f; /* secondary text */
+	--ep-ink-faint: #9c937d; /* metadata, placeholders */
+
+	/* The single accent + a ledger green for "good". */
+	--ep-vermillion: #c2401c;
+	--ep-vermillion-deep: #9a3214;
+	--ep-ledger: #3d5a4c;
+
+	/* Borders - found when you look, invisible when you don't. */
+	--ep-line: rgba(28, 24, 18, 0.16);
+	--ep-line-soft: rgba(28, 24, 18, 0.08);
+
+	/* Letterpress block shadows - hard offset, never blurred. */
+	--ep-press: 4px 4px 0 0 var(--ep-ink);
+	--ep-press-sm: 2px 2px 0 0 var(--ep-ink);
+	--ep-press-accent: 4px 4px 0 0 var(--ep-vermillion);
+
+	--ep-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Hoefler Text', Georgia, 'Times New Roman', serif;
+	--ep-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+	--ep-radius: 4px;
+	--ep-gap: 24px;
+
+	color: var(--ep-ink);
+	max-width: 1100px;
+}
+
+/* Pull WP's own page heading out - we render our own masthead. */
+.everypage-screen > h1:first-child {
+	display: none;
+}
+
+/* ---- Masthead --------------------------------------------------------- */
+
+.everypage-masthead {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	flex-wrap: wrap;
+	background: var(--ep-sheet);
+	border: 1.5px solid var(--ep-ink);
+	border-radius: var(--ep-radius);
+	box-shadow: var(--ep-press);
+	padding: 18px 22px;
+	margin: 8px 0 28px;
+}
+
+.everypage-brand {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+
+/* The wax seal - the EveryPage stamp. */
+.everypage-seal {
+	width: 38px;
+	height: 38px;
+	flex: none;
+	border-radius: 50%;
+	background: var(--ep-vermillion);
+	box-shadow: inset 0 0 0 2px rgba(252, 250, 244, 0.55);
+	display: grid;
+	place-items: center;
+	color: var(--ep-sheet);
+	transform: rotate(-4deg);
+}
+
+.everypage-seal .dashicons {
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
+}
+
+.everypage-wordmark {
+	font-family: var(--ep-serif);
+	font-size: 26px;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: -0.01em;
+	color: var(--ep-ink);
+}
+
+.everypage-tagline {
+	margin: 3px 0 0;
+	font-size: 12px;
+	color: var(--ep-ink-soft);
+	letter-spacing: 0.02em;
+}
+
+/* Connection pill - grounding: which account am I acting in? */
+.everypage-conn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	background: var(--ep-paper);
+	border: 1px solid var(--ep-line);
+	border-radius: 999px;
+	padding: 6px 14px 6px 12px;
+	font-size: 12.5px;
+	color: var(--ep-ink-soft);
+}
+
+.everypage-conn .dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--ep-ledger);
+}
+
+.everypage-conn.is-off .dot {
+	background: var(--ep-ink-faint);
+}
+
+.everypage-conn .plan {
+	font-weight: 600;
+	color: var(--ep-vermillion-deep);
+	text-transform: capitalize;
+}
+
+/* ---- Panels ----------------------------------------------------------- */
+
+.everypage-panel {
+	background: var(--ep-sheet);
+	border: 1.5px solid var(--ep-ink);
+	border-radius: var(--ep-radius);
+	box-shadow: var(--ep-press);
+	padding: 22px 24px;
+	margin: 0 0 28px;
+}
+
+.everypage-panel-head {
+	margin: 0 0 16px;
+}
+
+.everypage-panel-head h2 {
+	font-family: var(--ep-serif);
+	font-size: 19px;
+	font-weight: 700;
+	margin: 0;
+	padding: 0;
+	color: var(--ep-ink);
+}
+
+.everypage-sub {
+	margin: 4px 0 0;
+	font-size: 13px;
+	color: var(--ep-ink-soft);
+}
+
+/* ---- Share bar -------------------------------------------------------- */
+
+.everypage-share form {
+	display: flex;
+	gap: 14px;
+	align-items: center;
+	flex-wrap: wrap;
+	margin: 0;
+}
+
+.everypage-screen input[type='file'] {
+	font-size: 13px;
+	color: var(--ep-ink-soft);
+	background: var(--ep-paper);
+	border: 1px dashed var(--ep-line);
+	border-radius: var(--ep-radius);
+	padding: 9px 12px;
+	flex: 1 1 280px;
+	min-width: 220px;
+	cursor: pointer;
+}
+
+.everypage-screen input[type='file']::file-selector-button {
+	font-family: inherit;
+	font-weight: 600;
+	font-size: 12px;
+	color: var(--ep-ink);
+	background: var(--ep-manila);
+	border: 1px solid var(--ep-ink);
+	border-radius: 3px;
+	padding: 6px 12px;
+	margin-right: 12px;
+	cursor: pointer;
+	transition: transform 0.08s ease;
+}
+
+.everypage-screen input[type='file']::file-selector-button:hover {
+	transform: translate(-1px, -1px);
+}
+
+/* ---- Buttons (re-theme WP primary within our screens) ----------------- */
+
+.everypage-screen .button-primary,
+.everypage-button {
+	display: inline-flex;
+	align-items: center;
+	font-family: inherit;
+	font-weight: 600;
+	font-size: 13px;
+	line-height: 1.4;
+	color: var(--ep-sheet) !important;
+	background: var(--ep-vermillion);
+	border: 1.5px solid var(--ep-ink);
+	border-radius: var(--ep-radius);
+	box-shadow: var(--ep-press-sm);
+	padding: 8px 18px;
+	height: auto;
+	text-shadow: none;
+	text-decoration: none;
+	cursor: pointer;
+	transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease;
+}
+
+.everypage-screen .button-primary:hover,
+.everypage-button:hover,
+.everypage-screen .button-primary:focus,
+.everypage-button:focus {
+	background: var(--ep-vermillion-deep);
+	color: var(--ep-sheet) !important;
+	box-shadow: 3px 3px 0 0 var(--ep-ink);
+	transform: translate(-1px, -1px);
+	border-color: var(--ep-ink);
+	outline: none;
+}
+
+.everypage-screen .button-primary:active,
+.everypage-button:active {
+	box-shadow: 1px 1px 0 0 var(--ep-ink);
+	transform: translate(1px, 1px);
+}
+
+/* ---- Links ------------------------------------------------------------ */
+
+.everypage-screen a {
+	color: var(--ep-vermillion-deep);
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.everypage-screen a:hover {
+	color: var(--ep-vermillion);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+/* "Back to files" ghost action in headings. */
+.everypage-screen .page-title-action {
+	font-family: var(--ep-serif);
+	font-weight: 600;
+	font-size: 13px;
+	color: var(--ep-ink) !important;
+	background: var(--ep-paper);
+	border: 1px solid var(--ep-ink);
+	border-radius: 3px;
+	box-shadow: var(--ep-press-sm);
+	padding: 5px 14px;
+	text-decoration: none;
+}
+
+.everypage-screen .page-title-action:hover {
+	background: var(--ep-manila);
+	text-decoration: none;
+	transform: translate(-1px, -1px);
+}
+
+/* ---- Files ledger ----------------------------------------------------- */
+
+.everypage-files {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	font-size: 13.5px;
+}
+
+.everypage-files thead th {
+	font-family: var(--ep-serif);
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--ep-ink-soft);
+	text-align: left;
+	padding: 0 14px 10px;
+	border-bottom: 1.5px solid var(--ep-ink);
+}
+
+.everypage-files tbody td {
+	padding: 14px;
+	border-bottom: 1px solid var(--ep-line-soft);
+	vertical-align: middle;
+	color: var(--ep-ink-soft);
+}
+
+.everypage-files tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.everypage-files tbody tr:hover td {
+	background: var(--ep-paper);
+}
+
+.everypage-files .ep-name {
+	font-weight: 600;
+	color: var(--ep-ink);
+}
+
+/* Views as a tabular figure so the column reads like a ledger column. */
+.everypage-files .ep-views {
+	font-family: var(--ep-mono);
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--ep-ink);
+	font-variant-numeric: tabular-nums;
+}
+
+.everypage-files .everypage-link {
+	width: 240px;
+	max-width: 42vw;
+	font-family: var(--ep-mono);
+	font-size: 12px;
+	color: var(--ep-ink-soft);
+	background: var(--ep-paper);
+	border: 1px solid var(--ep-line);
+	border-radius: 3px;
+	padding: 5px 9px;
+	vertical-align: middle;
+	margin-right: 10px;
+}
+
+.everypage-actions {
+	white-space: nowrap;
+	text-align: right;
+}
+
+.everypage-actions .sep {
+	color: var(--ep-line);
+	margin: 0 8px;
+}
+
+.everypage-screen .button-link.delete {
+	color: var(--ep-vermillion-deep);
+	font-weight: 500;
+	text-decoration: none;
+}
+
+.everypage-screen .button-link.delete:hover {
+	color: var(--ep-vermillion);
+	text-decoration: underline;
+}
+
+/* ---- Icon buttons in the share cluster (copy link / QR / copy embed) --- */
+
+.everypage-icon-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	padding: 0;
+	vertical-align: middle;
+	color: var(--ep-ink-soft);
+	background: var(--ep-paper);
+	border: 1px solid var(--ep-line);
+	border-radius: 3px;
+	cursor: pointer;
+	transition: transform 0.08s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+.everypage-icon-btn:hover,
+.everypage-icon-btn:focus {
+	color: var(--ep-vermillion);
+	border-color: var(--ep-ink);
+	box-shadow: var(--ep-press-sm);
+	transform: translate(-1px, -1px);
+	outline: none;
+}
+
+.everypage-icon-btn svg {
+	width: 17px;
+	height: 17px;
+	display: block;
+}
+
+/* Copy feedback - the button briefly stamps ledger-green. */
+.everypage-copy-btn.is-copied {
+	color: var(--ep-sheet);
+	background: var(--ep-ledger);
+	border-color: var(--ep-ink);
+}
+
+.everypage-share-cluster {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+
+.everypage-share-cluster .everypage-link {
+	margin-right: 4px;
+}
+
+/* ---- Settings drawer --------------------------------------------------- */
+
+.everypage-drawer-card {
+	width: 640px;
+	max-height: 86vh;
+	overflow-y: auto;
+	text-align: left;
+}
+
+.everypage-drawer-card .everypage-modal-title,
+.everypage-drawer-card .everypage-modal-sub {
+	text-align: left;
+}
+
+.ep-drawer-loading {
+	margin: 12px 0;
+	color: var(--ep-ink-soft);
+	font-size: 13px;
+}
+
+.ep-drawer-banner {
+	margin: 0 0 14px;
+	padding: 10px 12px;
+	font-size: 13px;
+	color: var(--ep-vermillion-deep);
+	background: var(--ep-paper);
+	border: 1px solid var(--ep-vermillion);
+	border-radius: 3px;
+}
+
+.ep-section {
+	border: 1px solid var(--ep-line);
+	border-radius: var(--ep-radius);
+	background: var(--ep-paper);
+	margin: 0 0 12px;
+}
+
+.ep-section > summary {
+	font-family: var(--ep-serif);
+	font-size: 14.5px;
+	font-weight: 700;
+	color: var(--ep-ink);
+	padding: 10px 14px;
+	cursor: pointer;
+	list-style-position: inside;
+}
+
+.ep-section[open] > summary {
+	border-bottom: 1px solid var(--ep-line-soft);
+}
+
+.ep-count {
+	display: inline-block;
+	min-width: 18px;
+	text-align: center;
+	margin-left: 6px;
+	padding: 1px 6px;
+	font-family: var(--ep-mono);
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--ep-sheet);
+	background: var(--ep-ledger);
+	border-radius: 999px;
+	vertical-align: 1px;
+}
+
+.ep-section-body {
+	padding: 12px 14px 14px;
+	background: var(--ep-sheet);
+	border-radius: 0 0 var(--ep-radius) var(--ep-radius);
+}
+
+.ep-field {
+	padding: 9px 0;
+	border-bottom: 1px solid var(--ep-line-soft);
+	font-size: 13px;
+	color: var(--ep-ink-soft);
+}
+
+.ep-field:last-child {
+	border-bottom: 0;
+}
+
+.ep-field .ep-label {
+	display: block;
+	font-weight: 600;
+	color: var(--ep-ink);
+	margin-bottom: 5px;
+}
+
+.ep-field .ep-inline {
+	display: flex;
+	gap: 14px;
+	flex-wrap: wrap;
+	align-items: center;
+	margin: 4px 0;
+}
+
+.ep-field .ep-inline label {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.ep-field .ep-check {
+	display: block;
+	margin: 5px 0;
+}
+
+.ep-field input[type='number'] {
+	width: 90px;
+}
+
+.ep-field input[type='text'],
+.ep-field input[type='password'],
+.ep-field input[type='datetime-local'] {
+	width: 100%;
+	max-width: 320px;
+	font-size: 13px;
+	background: var(--ep-paper);
+	border: 1px solid var(--ep-line);
+	border-radius: 3px;
+	color: var(--ep-ink);
+}
+
+.ep-hint {
+	margin: 4px 0 0;
+	font-size: 12px;
+	color: var(--ep-ink-faint);
+}
+
+.ep-error {
+	margin: 8px 0 0;
+	font-size: 12.5px;
+	font-weight: 500;
+	color: var(--ep-vermillion-deep);
+}
+
+/* Plan-gated controls: visible but disabled, never hidden. */
+.ep-field.is-locked {
+	opacity: 0.6;
+}
+
+.ep-field.is-locked .ep-upgrade {
+	opacity: 1;
+}
+
+.ep-upgrade {
+	display: inline-block;
+	margin-top: 5px;
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--ep-vermillion-deep);
+}
+
+/* display:inline-block above would defeat the hidden attribute the JS
+   toggles, showing upgrade prompts to fully-entitled accounts. */
+.ep-upgrade[hidden] {
+	display: none;
+}
+
+/* Lead-capture form builder rows. */
+.ep-gf-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 6px 0;
+	border-bottom: 1px dashed var(--ep-line-soft);
+}
+
+.ep-gf-row input[type='text'] {
+	flex: 1 1 140px;
+	max-width: 200px;
+}
+
+.ep-gf-type {
+	font-family: var(--ep-mono);
+	font-size: 11.5px;
+	color: var(--ep-ink-faint);
+	min-width: 60px;
+}
+
+.ep-gf-req {
+	white-space: nowrap;
+	font-size: 12px;
+}
+
+.ep-gf-remove {
+	color: var(--ep-vermillion-deep);
+}
+
+.ep-gf-add {
+	margin-top: 8px;
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.ep-drawer-foot {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 14px;
+	margin-top: 16px;
+	padding-top: 14px;
+	border-top: 1.5px solid var(--ep-ink);
+}
+
+.ep-drawer-status {
+	font-size: 12.5px;
+	color: var(--ep-ink-soft);
+}
+
+/* ---- QR modal --------------------------------------------------------- */
+
+.everypage-modal[hidden] {
+	display: none;
+}
+
+.everypage-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 24px;
+}
+
+.everypage-modal-backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(28, 24, 18, 0.55);
+}
+
+.everypage-modal-card {
+	position: relative;
+	z-index: 1;
+	width: 340px;
+	max-width: 100%;
+	background: var(--ep-sheet);
+	border: 1.5px solid var(--ep-ink);
+	border-radius: var(--ep-radius);
+	box-shadow: 7px 7px 0 0 var(--ep-ink);
+	padding: 24px 24px 26px;
+	text-align: center;
+	animation: everypage-stamp 0.28s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+@keyframes everypage-stamp {
+	0% {
+		opacity: 0;
+		transform: scale(1.1) rotate(-2deg);
+	}
+	100% {
+		opacity: 1;
+		transform: scale(1) rotate(0);
+	}
+}
+
+.everypage-modal-x {
+	position: absolute;
+	top: 8px;
+	right: 10px;
+	width: 30px;
+	height: 30px;
+	font-size: 22px;
+	line-height: 1;
+	color: var(--ep-ink-faint);
+	background: none;
+	border: 0;
+	cursor: pointer;
+}
+
+.everypage-modal-x:hover {
+	color: var(--ep-vermillion);
+}
+
+.everypage-modal-title {
+	font-family: var(--ep-serif);
+	font-size: 19px;
+	font-weight: 700;
+	margin: 0;
+	color: var(--ep-ink);
+}
+
+.everypage-modal-sub {
+	margin: 4px 0 16px;
+	font-size: 12.5px;
+	color: var(--ep-ink-soft);
+	word-break: break-word;
+}
+
+.everypage-qr-frame {
+	background: #fff;
+	border: 1px solid var(--ep-line);
+	border-radius: 3px;
+	padding: 14px;
+	margin: 0 auto 18px;
+	width: 232px;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.everypage-qr-frame img {
+	display: block;
+	width: 100%;
+	height: auto;
+	image-rendering: pixelated; /* keep QR modules crisp when scaled */
+}
+
+.everypage-qr-frame.is-loading {
+	min-height: 200px;
+}
+
+body.everypage-modal-open {
+	overflow: hidden;
+}
+
+/* ---- Stat tiles (analytics) ------------------------------------------- */
+
+.everypage-fileline {
+	display: flex;
+	align-items: baseline;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin: 0 0 20px;
+}
+
+.everypage-fileline .ep-filename {
+	font-family: var(--ep-serif);
+	font-size: 18px;
+	font-weight: 700;
+	color: var(--ep-ink);
+}
+
+.everypage-stats {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 16px;
+	margin: 0 0 28px;
+}
+
+.everypage-card {
+	background: var(--ep-sheet);
+	border: 1.5px solid var(--ep-ink);
+	border-radius: var(--ep-radius);
+	box-shadow: var(--ep-press-sm);
+	padding: 16px 18px;
+}
+
+.everypage-card-value {
+	font-family: var(--ep-serif);
+	font-size: 30px;
+	font-weight: 700;
+	line-height: 1;
+	color: var(--ep-ink);
+	font-variant-numeric: tabular-nums;
+}
+
+.everypage-card-label {
+	font-size: 11.5px;
+	color: var(--ep-ink-soft);
+	margin-top: 7px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+/* Hero metric - the headline number leads. */
+.everypage-card.is-hero {
+	grid-row: span 2;
+	background: var(--ep-ink);
+	border-color: var(--ep-ink);
+	box-shadow: var(--ep-press-accent);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.everypage-card.is-hero .everypage-card-value {
+	color: var(--ep-paper);
+	font-size: 48px;
+}
+
+.everypage-card.is-hero .everypage-card-label {
+	color: var(--ep-manila);
+}
+
+/* ---- Breakdowns with proportional bars -------------------------------- */
+
+.everypage-breakdowns {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: var(--ep-gap);
+	margin: 0 0 28px;
+}
+
+.everypage-breakdown h3 {
+	font-family: var(--ep-serif);
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	color: var(--ep-ink);
+	margin: 0 0 10px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--ep-line);
+}
+
+.everypage-breakdown ul {
+	margin: 0;
+}
+
+.everypage-breakdown li {
+	position: relative;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 9px 10px;
+	font-size: 13px;
+	color: var(--ep-ink-soft);
+	border-radius: 3px;
+	overflow: hidden;
+}
+
+/* The bar lives behind the row - manila fill, low and quiet. */
+.ep-bd-bar {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	background: var(--ep-manila);
+	opacity: 0.5;
+	z-index: 0;
+	border-radius: 3px;
+}
+
+.ep-bd-label,
+.ep-bd-count {
+	position: relative;
+	z-index: 1;
+}
+
+.ep-bd-label {
+	color: var(--ep-ink);
+	font-weight: 500;
+}
+
+.ep-bd-count {
+	font-family: var(--ep-mono);
+	font-variant-numeric: tabular-nums;
+	color: var(--ep-ink-soft);
+}
+
+/* ---- Sessions ledger -------------------------------------------------- */
+
+.everypage-screen h2.everypage-section {
+	font-family: var(--ep-serif);
+	font-size: 17px;
+	font-weight: 700;
+	color: var(--ep-ink);
+	margin: 0 0 12px;
+}
+
+table.everypage-sessions {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	background: var(--ep-sheet);
+	border: 1.5px solid var(--ep-ink);
+	border-radius: var(--ep-radius);
+	box-shadow: var(--ep-press-sm);
+	overflow: hidden;
+	font-size: 13px;
+}
+
+table.everypage-sessions thead th {
+	font-family: var(--ep-serif);
+	font-size: 11.5px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--ep-ink-soft);
+	text-align: left;
+	padding: 11px 14px;
+	background: var(--ep-paper-deep);
+	border-bottom: 1.5px solid var(--ep-ink);
+}
+
+table.everypage-sessions tbody td {
+	padding: 11px 14px;
+	border-bottom: 1px solid var(--ep-line-soft);
+	color: var(--ep-ink-soft);
+}
+
+table.everypage-sessions tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+table.everypage-sessions tbody tr:hover td {
+	background: var(--ep-paper);
+}
+
+.everypage-fulllink {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-family: var(--ep-serif);
+	font-weight: 600;
+	font-size: 13.5px;
+	margin-top: 18px;
+}
+
+/* ---- Settings form ---------------------------------------------------- */
+
+.everypage-screen .form-table th {
+	font-family: var(--ep-serif);
+	color: var(--ep-ink);
+}
+
+.everypage-screen input[type='password'].regular-text,
+.everypage-screen input[type='text'].regular-text {
+	font-family: var(--ep-mono);
+	font-size: 13px;
+	background: var(--ep-paper);
+	border: 1px solid var(--ep-line);
+	border-radius: 3px;
+	color: var(--ep-ink);
+	box-shadow: none;
+}
+
+.everypage-screen input.regular-text:focus {
+	border-color: var(--ep-vermillion);
+	box-shadow: 0 0 0 1px var(--ep-vermillion);
+	outline: none;
+}
+
+/* ---- Status lines ----------------------------------------------------- */
+
+.everypage-status {
+	margin: 10px 0 0;
+	font-size: 13px;
+}
+
+.everypage-ok {
+	color: var(--ep-ledger);
+	font-weight: 500;
+}
+
+.everypage-bad {
+	color: var(--ep-vermillion-deep);
+	font-weight: 500;
+}
+
+/* ---- Dashboard widget recent reads ------------------------------------ */
+
+.everypage-reads {
+	margin: 0;
+}
+
+.everypage-reads li {
+	padding: 9px 0;
+	border-bottom: 1px solid var(--ep-line-soft, #f0f0f1);
+}
+
+.everypage-reads li:last-child {
+	border-bottom: 0;
+}
+
+.everypage-reads-meta {
+	color: var(--ep-ink-faint, #646970);
+	font-size: 12px;
+}
+
+/* ---- Responsive ------------------------------------------------------- */
+
+@media screen and (max-width: 782px) {
+	.everypage-stats {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.everypage-card.is-hero {
+		grid-column: 1 / -1;
+		grid-row: auto;
+	}
+
+	.everypage-files .everypage-link {
+		max-width: 60vw;
+	}
+}

@@ -1,0 +1,51 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "everypage/document",
+	"version": "1.1.0",
+	"title": "EveryPage Document",
+	"category": "embed",
+	"icon": "media-document",
+	"description": "Embed a tracked EveryPage PDF inline, or link to it with a styled button.",
+	"keywords": [ "pdf", "document", "embed", "everypage", "analytics" ],
+	"textdomain": "everypage",
+	"attributes": {
+		"uuid": {
+			"type": "string",
+			"default": ""
+		},
+		"shortId": {
+			"type": "string",
+			"default": ""
+		},
+		"fileName": {
+			"type": "string",
+			"default": ""
+		},
+		"mode": {
+			"type": "string",
+			"enum": [ "embed", "button" ],
+			"default": "embed"
+		},
+		"height": {
+			"type": "number",
+			"default": 600
+		},
+		"text": {
+			"type": "string",
+			"default": ""
+		},
+		"buttonStyle": {
+			"type": "string",
+			"enum": [ "button", "link" ],
+			"default": "button"
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css"
+}
