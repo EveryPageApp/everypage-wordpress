@@ -12,7 +12,7 @@ Share PDFs as secure, trackable links, embed them as flipbooks, and see who actu
 
 == Description ==
 
-EveryPage turns your PDFs into secure, trackable share links - and shows you who actually read them, right inside wp-admin. Instead of emailing an attachment or dropping a file on a page and hoping, you get a clean link and a readership report: who opened it, how far they read, how long they spent, and whether they came back.
+[EveryPage](https://everypage.co) turns your PDFs into secure, trackable share links - and shows you who actually read them, right inside wp-admin. Instead of emailing an attachment or dropping a file on a page and hoping, you get a clean link and a readership report: who opened it, how far they read, how long they spent, and whether they came back.
 
 It is built for anyone who publishes documents meant to do a job - lead magnets, whitepapers, price lists, proposals, reports, course material, media kits - and wants to know how they land.
 
@@ -35,7 +35,7 @@ It is built for anyone who publishes documents meant to do a job - lead magnets,
 
 EveryPage measures readership without storing visitor IP addresses - readers are pseudonymous, so you get returning-reader detection and engagement without holding personal data you would rather not be responsible for. Password protection, an email-capture gate, link expiry, and AES-256 encrypted storage are available depending on your EveryPage plan.
 
-You need a free EveryPage account and an API key (Account → API keys at everypage.co). This plugin is a client for the EveryPage service (https://everypage.co); PDFs you share are uploaded to your EveryPage account over HTTPS.
+You need a free EveryPage account and an API key (Account → API keys at [everypage.co](https://everypage.co)). This plugin is a client for the EveryPage service (https://everypage.co); PDFs you share are uploaded to your EveryPage account over HTTPS.
 
 Development happens on GitHub: https://github.com/EveryPageApp/everypage-wordpress - issues and pull requests welcome.
 
@@ -43,7 +43,7 @@ Development happens on GitHub: https://github.com/EveryPageApp/everypage-wordpre
 
 1. Upload the `everypage` folder to `/wp-content/plugins/`, or install the zip via Plugins → Add New → Upload.
 2. Activate the plugin.
-3. Go to **EveryPage → Settings**, paste your API key (from everypage.co/account → API keys), and save.
+3. Go to **EveryPage → Settings**, paste your API key (from [everypage.co/account](https://everypage.co/account) → API keys), and save.
 
 == Screenshots ==
 
@@ -56,7 +56,7 @@ Development happens on GitHub: https://github.com/EveryPageApp/everypage-wordpre
 == Frequently Asked Questions ==
 
 = Where do I get an API key? =
-Create one at everypage.co/account under "API keys". It starts with `ep_live_`.
+Create one at [everypage.co/account](https://everypage.co/account) under "API keys". It starts with `ep_live_`.
 
 = Is my API key stored securely? =
 It's stored in your site's options table and sent only to everypage.co over HTTPS. Treat it like a password; revoke it anytime from your EveryPage account.
@@ -71,7 +71,7 @@ No. The plugin only contacts EveryPage from wp-admin when you upload or view a f
 No. EveryPage measures readership first-party and never stores visitor IP addresses; readers are pseudonymous. The plugin contacts no service other than EveryPage.
 
 = What EveryPage plan do I need? =
-The Free plan covers core readership (views, readers, time spent) on up to 3 PDFs, no card required. Page-level analytics, password protection, the email gate, longer expiry, and more files come with the paid plans. See everypage.co/pricing.
+The Free plan covers core readership (views, readers, time spent) on up to 3 PDFs, no card required. Page-level analytics, password protection, the email gate, longer expiry, and more files come with the paid plans. See [everypage.co/pricing](https://everypage.co/pricing).
 
 = Can I share a PDF that is already in my Media Library? =
 Yes. On any PDF attachment you'll find a "Share via EveryPage" row action, a button in the attachment details, and a bulk action. Each share gives you the tracked link, a QR code, and an embed snippet, and the plugin can optionally rewrite existing links to that PDF in your posts and pages (with a dry-run preview and an explicit confirm first).
