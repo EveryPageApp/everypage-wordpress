@@ -1,0 +1,89 @@
+# Lint and test on every push and pull request.
+#
+# The PHP tests run inside wp-env (Docker) because they need a real WordPress
+# and its test library: the plugin is thin glue over WP APIs, and stubbing them
+# would test the stubs. wp-env mounts this whole directory at
+# wp-content/everypage-dev so PHPUnit, its config, and vendor/ are reachable
+# from inside the container.
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: PHP coding standards
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          coverage: none
+          tools: composer
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: PHPCS
+        run: composer run lint
+
+  test-php:
+    name: PHP unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: Start WordPress
+        run: npx --yes @wordpress/env@latest start
+
+      - name: PHPUnit
+        run: npx --yes @wordpress/env@latest run tests-cli --env-cwd=wp-content/everypage-dev vendor/bin/phpunit
+
+  test-js:
+    name: Block build and JS tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: everypage
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: everypage/package-lock.json
+
+      - run: npm ci
+
+      - name: Jest
+        run: npm run test:js
+
+      # A build failure here is a release failure: build/ is what
+      # register_block_type() loads on the front end.
+      - name: Build
+        run: npm run build

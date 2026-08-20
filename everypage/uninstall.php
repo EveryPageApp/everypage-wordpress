@@ -19,6 +19,13 @@ function everypage_uninstall_site() {
 	// Options.
 	delete_option( 'everypage_settings' );
 	delete_option( 'everypage_cache_v' );
+	delete_option( 'everypage_version' );
+
+	// Lead sync: cursor, sweep de-dup set, last error, and the cron event.
+	delete_option( 'everypage_leads_cursor' );
+	delete_option( 'everypage_leads_seen' );
+	delete_option( 'everypage_leads_last_error' );
+	wp_clear_scheduled_hook( 'everypage_leads_sync' );
 
 	// Transient cache: keys are 'everypage_' . md5( ... ), so expired and live
 	// entries (values + timeouts) are swept with one LIKE per prefix.
@@ -36,6 +43,12 @@ function everypage_uninstall_site() {
 	delete_post_meta_by_key( '_everypage_uuid' );
 	delete_post_meta_by_key( '_everypage_short_id' );
 	delete_post_meta_by_key( '_everypage_shared_at' );
+
+	// Subscriber accounts created from leads are NOT removed: they are real
+	// WordPress users the site owner may have mailed, and deleting people's
+	// accounts on plugin removal would be a nasty surprise. Only our marker
+	// meta goes.
+	delete_metadata( 'user', 0, 'everypage_lead_source', '', true );
 }
 
 everypage_uninstall_site();

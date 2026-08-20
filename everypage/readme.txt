@@ -2,9 +2,9 @@
 Contributors: nickpears
 Tags: pdf, analytics, documents, tracking, flipbook
 Requires at least: 6.6
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,18 @@ It is built for anyone who publishes documents meant to do a job - lead magnets,
 * Generate a QR code for any link and download it as a PNG.
 * Share any PDF already in your Media Library: a "Share via EveryPage" row action, a button in the attachment details, and a bulk action - each share gives you the link, QR code, and embed snippet, and an EveryPage column shows view counts at a glance.
 * Replace existing links to a Media Library PDF across your posts and pages with its tracked EveryPage link - with a dry-run preview first, an explicit confirm, and your posts' revision history keeping the previous versions.
+* Bring captured leads into WordPress: when a reader completes your email gate or lead-capture form, the plugin fires the `everypage_lead_captured` action so MailPoet, FluentCRM, Newsletter, WP Fusion, or three lines of your own code can add them to a list (EveryPage Pro).
+* Build with Elementor instead of the block editor? The **EveryPage Document** widget renders the same tracked viewer, embedded or as a button.
+
+**Leads, in WordPress**
+
+Documents that ask for an email - a lead-capture form or the simple "Require email to view" gate - collect readers' details on EveryPage. Turn on lead sync (EveryPage -> Settings) and the plugin checks hourly for new ones and fires an action hook for each:
+
+`add_action( 'everypage_lead_captured', function ( $lead ) {`
+`    // $lead['email'], $lead['fields'], $lead['file_uuid'], $lead['file_name'], $lead['source']`
+`} );`
+
+Optionally, each new lead can also be created as a WordPress subscriber. Leads captured before you switch sync on are left alone, so turning it on never floods your list with old contacts. Lead capture and reporting require an EveryPage Pro plan.
 
 **Privacy-first by design**
 
@@ -92,13 +104,21 @@ The plugin sends data to EveryPage over HTTPS only when you actively use it:
 * When you share a PDF from your Media Library (row action, attachment details, or bulk action), that PDF file is read from your server and sent to your EveryPage account the same way.
 * When you view your files, a file's analytics, or the "Recent reads" dashboard widget, the plugin sends authenticated requests to read that data.
 * When you open a file's QR code, the plugin requests the QR image for that file.
-* When you use the EveryPage Document block in the editor, the plugin lists your files, uploads a PDF you choose, or saves viewer settings - all server-side; your API key is never sent to the browser. A published embed loads the document viewer from everypage.co in visitors' browsers (no API key involved).
+* When lead sync is switched on, the plugin asks EveryPage hourly for leads captured since the last check, and for the reader details recorded against documents using the "Require email to view" gate. Those leads are then stored in your WordPress database, which makes you - not EveryPage - responsible for them under your own privacy policy.
+* When you use the EveryPage Document block or the Elementor widget in the editor, the plugin lists your files, uploads a PDF you choose, or saves viewer settings - all server-side; your API key is never sent to the browser. A published embed loads the document viewer from everypage.co in visitors' browsers (no API key involved).
 
 Every request includes your EveryPage API key as a bearer token. Nothing is sent until you take one of the actions above, and the plugin contacts no other external service.
 
 Service provided by EveryPage. Terms of Service: https://everypage.co/terms - Privacy Policy: https://everypage.co/terms
 
 == Changelog ==
+
+= 1.2.0 =
+* New: lead sync - captured emails and form fills arrive in WordPress and fire the `everypage_lead_captured` action for your mailing-list or CRM plugin, with an option to create a subscriber account for each one (requires EveryPage Pro).
+* New: EveryPage Document widget for Elementor, rendering the same tracked viewer as the block.
+* Leads captured before you enable sync are left alone, so switching it on never replays your history into your mailing list.
+* The block, the Elementor widget, and the `[everypage]` shortcode now share a single render path, so their output can never drift apart.
+* Tested up to WordPress 7.1.
 
 = 1.1.0 =
 * New: per-file settings drawer on the Files page - edit viewer, protection, capture, and link settings in one place. Controls above your EveryPage plan stay visible but disabled, with an upgrade link.
@@ -121,6 +141,9 @@ Service provided by EveryPage. Terms of Service: https://everypage.co/terms - Pr
 * Responses are cached briefly so admin screens stay responsive; clear errors for oversized uploads; uninstall removes stored settings.
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Adds lead sync into WordPress with the everypage_lead_captured action hook, and an Elementor widget.
 
 = 1.1.0 =
 Adds the EveryPage Document block, Media Library sharing (with link replacement), and a full per-file settings drawer with QR and embed codes. Now requires WordPress 6.6.

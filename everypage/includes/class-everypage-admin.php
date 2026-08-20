@@ -11,13 +11,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class EveryPage_Admin {
 
 	private $api;
+	private $leads;
 
 	/** Cached /api/v1/user result so the masthead + status share one request. */
 	private $user_cache  = null;
 	private $user_loaded = false;
 
-	public function __construct( EveryPage_API $api ) {
-		$this->api = $api;
+	public function __construct( EveryPage_API $api, ?EveryPage_Leads $leads = null ) {
+		$this->api   = $api;
+		$this->leads = $leads instanceof EveryPage_Leads ? $leads : new EveryPage_Leads( $api );
 	}
 
 	/** The connected account (WP_Error or null), fetched at most once per request. */
@@ -241,14 +243,21 @@ class EveryPage_Admin {
 			return;
 		}
 		$map = array(
-			'saved'      => array( 'success', __( 'Settings saved.', 'everypage' ) ),
-			'uploaded'   => array( 'success', __( 'PDF uploaded and shared.', 'everypage' ) ),
-			'deleted'    => array( 'success', __( 'File deleted.', 'everypage' ) ),
-			'notpdf'     => array( 'error', __( 'Only PDF files can be shared.', 'everypage' ) ),
-			'nofile'     => array( 'error', __( 'Please choose a PDF to upload.', 'everypage' ) ),
-			'uploadfail' => array( 'error', __( 'Upload failed. Check your API key and plan limits.', 'everypage' ) ),
-			'readfail'   => array( 'error', __( 'Could not read the uploaded file.', 'everypage' ) ),
-			'toolarge'   => array(
+			'saved'       => array( 'success', __( 'Settings saved.', 'everypage' ) ),
+			'uploaded'    => array( 'success', __( 'PDF uploaded and shared.', 'everypage' ) ),
+			'deleted'     => array( 'success', __( 'File deleted.', 'everypage' ) ),
+			'notpdf'      => array( 'error', __( 'Only PDF files can be shared.', 'everypage' ) ),
+			'nofile'      => array( 'error', __( 'Please choose a PDF to upload.', 'everypage' ) ),
+			'uploadfail'  => array( 'error', __( 'Upload failed. Check your API key and plan limits.', 'everypage' ) ),
+			'readfail'    => array( 'error', __( 'Could not read the uploaded file.', 'everypage' ) ),
+			'leadssaved'  => array( 'success', __( 'Lead settings saved.', 'everypage' ) ),
+			'leadsprimed' => array(
+				'success',
+				__( 'Lead sync is on. Leads captured from now on will be synced; leads captured before today are left alone.', 'everypage' ),
+			),
+			'leadssynced' => array( 'success', __( 'Lead sync finished.', 'everypage' ) ),
+			'leadsfailed' => array( 'error', __( 'Lead sync failed. See the message under Lead capture below.', 'everypage' ) ),
+			'toolarge'    => array(
 				'error',
 				sprintf(
 					/* translators: %s: maximum upload size, e.g. "8 MB" */
@@ -297,6 +306,107 @@ class EveryPage_Admin {
 					<?php submit_button( __( 'Save key', 'everypage' ) ); ?>
 				</form>
 			</div>
+			<?php $this->render_leads_panel(); ?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Lead capture panel: turn EveryPage's captured leads into WordPress
+	 * events. Pro-gated upstream, so below Pro the controls stay visible but
+	 * disabled with the same inline upgrade link the settings drawer uses.
+	 */
+	private function render_leads_panel() {
+		if ( ! $this->api->has_key() ) {
+			return; // Nothing to configure until the account is connected.
+		}
+		$user     = $this->current_user();
+		$plan     = ( ! is_wp_error( $user ) && ! empty( $user['subscription'] ) ) ? (string) $user['subscription'] : 'free';
+		$is_pro   = 'pro' === strtolower( $plan );
+		$enabled  = $this->leads->is_enabled();
+		$error    = $this->leads->last_error();
+		$next     = $this->leads->next_run();
+		$disabled = $is_pro ? '' : ' disabled';
+		?>
+		<div class="everypage-panel" style="max-width:680px">
+			<div class="everypage-panel-head">
+				<h2><?php esc_html_e( 'Lead capture', 'everypage' ); ?></h2>
+				<p class="everypage-sub">
+					<?php esc_html_e( 'Bring the names and emails your documents capture into WordPress, where your mailing-list or CRM plugin can act on them.', 'everypage' ); ?>
+				</p>
+			</div>
+			<form method="post">
+				<?php wp_nonce_field( 'everypage_save_leads' ); ?>
+				<input type="hidden" name="everypage_action" value="save_leads" />
+				<table class="form-table" role="presentation">
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Sync captured leads', 'everypage' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="everypage_leads_sync" value="1" <?php checked( $enabled ); ?><?php echo esc_attr( $disabled ); ?> />
+								<?php esc_html_e( 'Check EveryPage hourly for new leads', 'everypage' ); ?>
+							</label>
+							<?php if ( ! $is_pro ) : ?>
+								<a class="ep-upgrade" href="<?php echo esc_url( 'https://everypage.co/pricing' ); ?>" target="_blank" rel="noopener">
+									<?php esc_html_e( 'Lead capture is a Pro feature — upgrade', 'everypage' ); ?>
+								</a>
+							<?php endif; ?>
+							<p class="description">
+								<?php esc_html_e( 'Each lead fires the everypage_lead_captured action, which MailPoet, FluentCRM, WP Fusion, or your own code can hook.', 'everypage' ); ?>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'Email-only gates', 'everypage' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="everypage_leads_sweep" value="1" <?php checked( $this->leads->sweep_enabled() ); ?><?php echo esc_attr( $disabled ); ?> />
+								<?php esc_html_e( 'Also collect addresses from documents using "Require email to view"', 'everypage' ); ?>
+							</label>
+							<p class="description">
+								<?php esc_html_e( 'Those addresses are captured on the reading session rather than in a form, so they are matched up periodically instead of streamed. Recent readers are picked up; a very busy document may miss some.', 'everypage' ); ?>
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><?php esc_html_e( 'WordPress users', 'everypage' ); ?></th>
+						<td>
+							<label>
+								<input type="checkbox" name="everypage_leads_create_users" value="1" <?php checked( $this->leads->creates_users() ); ?><?php echo esc_attr( $disabled ); ?> />
+								<?php esc_html_e( 'Create a subscriber account for each new lead', 'everypage' ); ?>
+							</label>
+							<p class="description">
+								<?php esc_html_e( 'Off by default. Existing accounts are never touched, and no notification email is sent.', 'everypage' ); ?>
+							</p>
+						</td>
+					</tr>
+				</table>
+				<p class="description">
+					<?php esc_html_e( 'Leads you sync are stored in your WordPress database, which makes you responsible for them under your own privacy policy. EveryPage keeps its copy either way.', 'everypage' ); ?>
+				</p>
+				<?php submit_button( __( 'Save lead settings', 'everypage' ) ); ?>
+			</form>
+			<?php if ( $enabled ) : ?>
+				<form method="post" style="margin-top:-12px">
+					<?php wp_nonce_field( 'everypage_sync_leads' ); ?>
+					<input type="hidden" name="everypage_action" value="sync_leads" />
+					<button type="submit" class="button"><?php esc_html_e( 'Sync now', 'everypage' ); ?></button>
+					<?php if ( $next ) : ?>
+						<span class="description" style="margin-left:8px">
+							<?php
+							printf(
+								/* translators: %s: human-readable time difference, e.g. "42 mins" */
+								esc_html__( 'Next automatic check in %s.', 'everypage' ),
+								esc_html( human_time_diff( time(), $next ) )
+							);
+							?>
+						</span>
+					<?php endif; ?>
+				</form>
+			<?php endif; ?>
+			<?php if ( '' !== $error ) : ?>
+				<p class="everypage-status everypage-bad"><?php echo esc_html( $error ); ?></p>
+			<?php endif; ?>
 		</div>
 		<?php
 	}

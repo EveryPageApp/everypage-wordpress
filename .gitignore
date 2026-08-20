@@ -3,3 +3,4 @@
 node_modules/
 everypage.zip
 vendor/
+.phpunit.result.cache

@@ -1,8 +1,11 @@
 {
-	"core": null,
-	"plugins": [ "./everypage" ],
-	"port": 8888,
-	"mappings": {
-		"wp-content/mu-plugins": "./bin/screenshot-env/mu-plugins"
-	}
+    "core": null,
+    "plugins": [
+        "./everypage"
+    ],
+    "port": 8888,
+    "mappings": {
+        "wp-content/mu-plugins": "./bin/screenshot-env/mu-plugins",
+        "wp-content/everypage-dev": "."
+    }
 }

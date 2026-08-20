@@ -413,6 +413,36 @@ function everypage_demo_events() {
 	return $out;
 }
 
+/** Canned lead-capture form submissions for the leads panel. */
+function everypage_demo_gate_responses() {
+	$now = time();
+	return array(
+		array(
+			'id'       => 412,
+			'fileUuid' => '3f9d2c71-8b4e-4a2f-9c1d-5e7a6b3f8d21',
+			'fileName' => 'Q3 Product Catalogue.pdf',
+			'readAt'   => gmdate( 'c', $now - 2 * HOUR_IN_SECONDS ),
+			'type'     => 'gate',
+			'fields'   => array(
+				'email'   => 'priya.raman@northwind.example',
+				'name'    => 'Priya Raman',
+				'company' => 'Northwind Interiors',
+			),
+		),
+		array(
+			'id'       => 411,
+			'fileUuid' => '3f9d2c71-8b4e-4a2f-9c1d-5e7a6b3f8d21',
+			'fileName' => 'Q3 Product Catalogue.pdf',
+			'readAt'   => gmdate( 'c', $now - DAY_IN_SECONDS ),
+			'type'     => 'gate',
+			'fields'   => array(
+				'email' => 't.okafor@brightfold.example',
+				'name'  => 'Tunde Okafor',
+			),
+		),
+	);
+}
+
 function everypage_demo_intercept( $pre, $args, $url ) {
 	$host = wp_parse_url( $url, PHP_URL_HOST );
 	if ( 'everypage.co' !== $host ) {
@@ -445,6 +475,30 @@ function everypage_demo_intercept( $pre, $args, $url ) {
 
 	if ( '/api/v1/files' === $path ) {
 		return everypage_demo_respond( everypage_demo_files() );
+	}
+
+	// Lead-capture form submissions, cursor-paged exactly like the real
+	// endpoint: `since` returns only rows above it, ascending.
+	if ( '/api/v1/gate-responses' === $path ) {
+		$since = (int) ( wp_parse_url( $url, PHP_URL_QUERY ) ? ( wp_parse_args( wp_parse_url( $url, PHP_URL_QUERY ) )['since'] ?? 0 ) : 0 );
+		$rows  = everypage_demo_gate_responses();
+		if ( $since > 0 ) {
+			$rows = array_values(
+				array_filter(
+					$rows,
+					function ( $row ) use ( $since ) {
+						return $row['id'] > $since;
+					}
+				)
+			);
+			usort(
+				$rows,
+				function ( $a, $b ) {
+					return $a['id'] - $b['id'];
+				}
+			);
+		}
+		return everypage_demo_respond( $rows );
 	}
 
 	if ( preg_match( '#^/api/v1/files/([^/]+)/qr-code$#', $path, $m ) || preg_match( '#^/api/files/([^/]+)/qr-code$#', $path, $m ) ) {

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<ruleset name="EveryPage WordPress plugin">
+	<description>WordPress coding standards for the EveryPage plugin.</description>
+
+	<file>everypage</file>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>everypage/build/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<!-- The plugin supports PHP 7.4+, matching the "Requires PHP" header. -->
+	<config name="testVersion" value="7.4-"/>
+	<config name="minimum_wp_version" value="6.6"/>
+
+	<!--
+		WordPress-Extra (which pulls in WordPress-Core) rather than the full
+		WordPress standard: the latter adds WordPress-Docs, whose @package tags
+		and per-function doc blocks would mean rewriting the header of every
+		file for no reader benefit. The security, escaping, and i18n rules that
+		actually matter are all in Core/Extra.
+	-->
+	<rule ref="WordPress-Extra"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="everypage"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="everypage"/>
+				<element value="EveryPage"/>
+				<element value="EVERYPAGE"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

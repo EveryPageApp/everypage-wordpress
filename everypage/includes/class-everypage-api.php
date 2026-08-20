@@ -137,6 +137,26 @@ class EveryPage_API {
 		return $res;
 	}
 
+	/**
+	 * Lead-capture form submissions (gate responses), Pro-only upstream.
+	 *
+	 * Deliberately NOT cached: this is a cursor read, and serving a stale
+	 * page would silently skip leads. With $since = 0 the newest rows come
+	 * back first; with a positive cursor the rows ascend from it, so a poller
+	 * walks forward through the whole stream without gaps or duplicates.
+	 *
+	 * @param int $since Highest id already consumed (0 for the newest page).
+	 * @param int $limit Rows per page (upstream max 100).
+	 * @return array|WP_Error List of gate events.
+	 */
+	public function list_gate_responses( $since = 0, $limit = 100 ) {
+		$path = '/api/v1/gate-responses?limit=' . absint( $limit );
+		if ( $since > 0 ) {
+			$path .= '&since=' . absint( $since );
+		}
+		return $this->request( 'GET', $path );
+	}
+
 	public function get_events( $limit = 25 ) {
 		return $this->cached_get( '/api/v1/events?limit=' . absint( $limit ), MINUTE_IN_SECONDS );
 	}

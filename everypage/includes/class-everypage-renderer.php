@@ -96,4 +96,64 @@ class EveryPage_Renderer {
 			esc_attr( $title )
 		);
 	}
+
+	/**
+	 * Resolve a stored document reference and render it — the whole of the
+	 * block's (and the Elementor widget's) front-end behaviour.
+	 *
+	 * Both surfaces store the same attribute shape, so the resolve rules live
+	 * here once: prefer the short id over the UUID and never a vanity slug
+	 * (the owner can change or remove a slug, and embeds are durable
+	 * artifacts); render nothing for a file that is verifiably gone rather
+	 * than a broken frame; render optimistically from stored attributes when
+	 * the API merely hiccups.
+	 *
+	 * @param array           $attributes uuid, shortId, mode, height, text, buttonStyle, fileName.
+	 * @param EveryPage_API   $api        Configured API client.
+	 * @return string HTML, or '' when there is nothing safe to render.
+	 */
+	public static function document( $attributes, EveryPage_API $api ) {
+		$uuid     = self::validate_id( isset( $attributes['uuid'] ) ? $attributes['uuid'] : '' );
+		$short_id = self::validate_id( isset( $attributes['shortId'] ) ? $attributes['shortId'] : '' );
+		if ( '' === $uuid && '' === $short_id ) {
+			return '';
+		}
+		if ( ! $api->has_key() ) {
+			return ''; // Unconfigured plugin renders nothing on the front end.
+		}
+
+		$mode   = isset( $attributes['mode'] ) && 'button' === $attributes['mode'] ? 'button' : 'embed';
+		$height = isset( $attributes['height'] ) ? absint( $attributes['height'] ) : 600;
+		$text   = isset( $attributes['text'] ) && '' !== trim( (string) $attributes['text'] )
+			? (string) $attributes['text']
+			: __( 'View document', 'everypage' );
+		$is_btn = ! isset( $attributes['buttonStyle'] ) || 'link' !== $attributes['buttonStyle'];
+		$title  = isset( $attributes['fileName'] ) ? (string) $attributes['fileName'] : '';
+
+		// Resolve the stored file so output reflects its current state. Cached
+		// (30s transient) so front-end page loads don't block on the API.
+		$file = $api->get_file( '' !== $uuid ? $uuid : $short_id );
+		if ( is_wp_error( $file ) ) {
+			$code = (string) $file->get_error_code();
+			if ( in_array( $code, array( 'everypage_http_404', 'everypage_http_410' ), true ) ) {
+				return ''; // Deleted or expired: no broken frame, no dead link.
+			}
+			// Transient failure (network, rate limit): render from stored attributes.
+		} else {
+			if ( ! empty( $file['shortId'] ) ) {
+				$short_id = self::validate_id( $file['shortId'] );
+			}
+			if ( ! empty( $file['originalName'] ) ) {
+				$title = (string) $file['originalName'];
+			}
+		}
+
+		$id = '' !== $short_id ? $short_id : $uuid;
+
+		if ( 'button' === $mode ) {
+			return self::link( $id, $text, $is_btn );
+		}
+
+		return self::embed( $id, $height, $title );
+	}
 }
