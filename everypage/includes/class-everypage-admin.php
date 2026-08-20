@@ -236,6 +236,23 @@ class EveryPage_Admin {
 		exit;
 	}
 
+	/**
+	 * "Sync now" result. The count rides along in the redirect so the notice
+	 * can say what actually happened instead of a bare "finished".
+	 */
+	private function leads_synced_message() {
+		// Read-only: a display-time count from our own redirect, sanitized here.
+		$count = isset( $_GET['everypage_count'] ) ? absint( wp_unslash( $_GET['everypage_count'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only notice display
+		if ( $count < 1 ) {
+			return __( 'Lead sync finished. No new leads.', 'everypage' );
+		}
+		return sprintf(
+			/* translators: %s: number of leads */
+			_n( 'Lead sync finished. %s new lead.', 'Lead sync finished. %s new leads.', $count, 'everypage' ),
+			number_format_i18n( $count )
+		);
+	}
+
 	private function notice() {
 		// Read-only: shows a one-time notice keyed to a fixed allowlist below. No
 		// state change, so no nonce applies (the value is sanitized before use).
@@ -255,7 +272,7 @@ class EveryPage_Admin {
 				'success',
 				__( 'Lead sync is on. Leads captured from now on will be synced; leads captured before today are left alone.', 'everypage' ),
 			),
-			'leadssynced' => array( 'success', __( 'Lead sync finished.', 'everypage' ) ),
+			'leadssynced' => array( 'success', $this->leads_synced_message() ),
 			'leadsfailed' => array( 'error', __( 'Lead sync failed. See the message under Lead capture below.', 'everypage' ) ),
 			'toolarge'    => array(
 				'error',
